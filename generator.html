@@ -1,0 +1,500 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+ <head>
+ <meta charset="utf-8">
+  <title> swagger javascript client 代码生成 </title>
+  <meta name="generator" content="editplus">
+  <meta name="author" content="">
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+ </head>
+
+ <body>
+
+   <button onclick="javascript:startGenerate();">开始生成</button>
+
+   <script src="js/jquery.min.js" type="text/javascript"></script>
+   <script src="js/HttpClient.js" type="text/javascript"></script>
+   
+   <!-- RestApi.js 为自动生成后的 Api 代码 -->
+   <script src="js/RestApi.generated.js" type="text/javascript"></script>
+   <!-- ApiMethod.conf.js 为 ApiMethodAliases Api方法别名映射 （自动生成） -->
+   <script src="js/ApiMethod.conf.generated.js" type="text/javascript"></script>
+   
+  <script language="javascript">
+  <!--
+
+// ----- 配置项区域开始 -----
+// 生成代码的根对象名称
+var SwaggerApiName = "Api";
+// Api方法别名映射（可以自动生成）
+if(!ApiMethodAliases)
+	var ApiMethodAliases = {
+		"loginUsingPOST":"login"
+	};
+// 属性、变量别名（javascript中的关键字映射可以加入进来）
+if(!VarNameAliases)
+	var VarNameAliases = {
+		"id":"_id"
+	};
+// ----- 配置项区域结束 -----
+
+
+
+
+// RestClient
+var RestApi = new HttpClient();
+var NoAliasesNameApiMethod = [];
+/* 
+ * 获取当前的 RestApi 的方法别名（在 ApiMethodAliases 中进行维护），
+ * 
+ */
+var getFuncName = function(name,desc){
+	if(!desc)desc="";
+	if(ApiMethodAliases[name]){
+		var aliases = ApiMethodAliases[name];
+		NoAliasesNameApiMethod.push({name:name,aliases:aliases,desc:desc});
+		return ApiMethodAliases[name];
+	}
+	NoAliasesNameApiMethod.push({name:name,aliases:name,desc:desc});
+	
+	return name;
+};
+/* 
+ * 自动输出 RestApi 的方法别名映射代码（构建 ApiMethodAliases 映射），
+ * 关注 “未命名” 开头的映射，建议全部指定别名。  
+ */
+var outputNewApiMethodAliases = function(){
+	var apiAliase = {};
+	var duplicatedApiAliase = [];
+	Coder.line(2);	
+
+	Coder.write("/* ApiMethod.conf.generated.js */");
+	Coder.line();
+
+	Coder.write("var ApiMethodAliases = {");
+	Coder.line();
+	var idx = 0;
+	for(var i in NoAliasesNameApiMethod){
+		var item = NoAliasesNameApiMethod[i];
+		Coder.space(2);
+		if(item.name == item.aliases){
+			Coder.write("/*无别名*/");
+		}
+		Coder.write("\"",item.name,"\" : ","\"",item.aliases,"\"");
+		if(idx < NoAliasesNameApiMethod.length - 1){
+			Coder.write(", ");
+		}
+		Coder.write(" // ",item.desc);
+		Coder.line();
+		idx++;
+		if(apiAliase[item.aliases] == true){
+			duplicatedApiAliase.push(item.aliases);
+		}else{
+			apiAliase[item.aliases]=true;
+		}
+	}
+	Coder.write("}");
+	Coder.line();
+	// 检查防止 API 方法别名重复
+	if(duplicatedApiAliase.length > 0){
+		Coder.write("API方法别名有重复的：");
+		Coder.line();
+		for(var i in duplicatedApiAliase){
+			Coder.write(duplicatedApiAliase[i],"; ");
+		}
+	}
+}
+/* 
+ * 获取当前的属性别名（在 VarNameAliases 中进行维护），
+ * 
+ */
+var getVarName = function(name){
+	if(VarNameAliases[name])
+		return VarNameAliases[name];
+	
+	return name;	
+};
+ 
+/* 
+ * 存储全局 VO 的定义
+ * 
+ */
+var definitions = {
+
+};
+	//* 生成代码从这里开始
+function startGenerate(){
+	RestApi.get({
+		url:"/swagger.json",
+		success:function(data){
+			//console.log(data);
+			// 获取到 Swagger Doc 后，生成代码
+			generate(data);
+		}
+	});
+}
+// */
+
+/*
+ * 代码输出工具类
+ */
+var Coder = {};
+/*
+ * 输出空格
+ * @param count 输出空格个数
+ */
+Coder.space = function(count){
+	if(count == null)
+		count = 1;
+	for(var i=0;i<count; i++)
+		document.write("&nbsp;&nbsp;");
+};
+/*
+ * 输出字符串
+ * @param arguments 输出字符串
+ */
+Coder.write = function(){
+	for(var i in arguments){
+		document.write(arguments[i]);
+	}
+};
+/*
+ * 输出带引号的字符串
+ * @param str 输出字符串
+ */
+Coder.writeStr = function(str){
+	for(var i in arguments){
+		document.write("\""+arguments[i]+"\"");
+	}	
+};
+/*
+ * 输出字符串，并追加一个回车换行
+ * @param str 输出字符串
+ * @param count 换行的个数
+ */
+Coder.writeLine = function(str,count){
+	document.write(str);
+	this.line(count);
+};
+/*
+ * 输出回车换行
+ * @param count 换行的个数
+ */
+Coder.line = function(count){
+	if(count == null)
+		count = 1;
+	for(var i=0;i<count; i++)
+		document.write("<br/>");
+};
+
+
+// var embedTypes = {};
+/*
+ * 用于输出模型的参数
+ * @param spaceCount 输出空格的个数
+ * @param model 模型
+ * @param deep 递归调用的次数
+ */
+var outputModel = function(spaceCount, model, deep){
+	if(!model)return;
+	
+	if(deep == null) // 默认递归次数为1
+		deep = 1;
+	else
+		deep++; // 递归加一
+
+	if(model["$ref"]){
+		var modelType = model["$ref"].replace("#/definitions/","");
+		/*
+		if(embedTypes[modelType]){
+			embedTypes[modelType]++;
+		}else{
+			embedTypes[modelType]=1;
+		}*/
+		model = definitions[modelType];
+	}
+	if(spaceCount == null) spaceCount = 1; // 默认输出空格 1 
+	if(model){
+		if(model.properties){
+			// 遍历模型的属性
+			for(var pi in model.properties){
+				var property = model.properties[pi];
+				Coder.write(" * ");
+				Coder.space(spaceCount);
+				var desc = property.description;
+				if(!desc)desc="";
+				var ty = property.type;
+				if(!ty && property["$ref"]){
+					ty = "json";
+				}			
+				// 如果属性类型是数组
+				if(ty == "array"){
+					// 如果属性类型是数组，一般情况下包含 property.items 属性
+					if(property.items){
+						// "$ref" 属性存放的是属性类型引用的对象定义（definitions 中包含）
+						// deep < 3 主要是为了防止循环引用导致的内存溢出。
+						if(property.items["$ref"] && deep < 3 ){
+							//console.log(embedTypes[modelType],"embedTypes[modelType]");
+							Coder.write("- " + getVarName(pi) + " {" + ty + "} " + desc);
+							Coder.line();
+							// 递归调用
+							outputModel(spaceCount + 2, property.items, deep);
+						}else{ // 其他条件下直接输出，不进行递归调用。
+							var _ty = property.items.type;
+							if(_ty == null)_ty = "";
+							Coder.write("- " + getVarName(pi) + " {" + ty + "[" + _ty + "]} " + desc);
+							Coder.line();
+						}
+					}
+				}else{ // 如果属性类型为非数组类型，直接输出
+					Coder.write("- " + getVarName(pi) + " {" + ty + "} " + desc);Coder.line();				
+				}				
+				
+				if(property["$ref"] && deep < 3){
+					//var p_schema = definitions[property["$ref"].replace("#/definitions/","")];
+					// 递归调用
+					outputModel(spaceCount + 2, property);
+				}
+			}
+		}
+	}
+	/*
+	if(embedTypes[modelType]){
+		embedTypes[modelType]--;
+	}*/
+};
+/*
+ * 根据 uri 和 path 生成 API 代码。
+ */
+var generateApi = function(uri, path){
+	// 支持的类型
+	var methods = ["get","put","post","delete"];
+	
+	for(var m in methods){
+		// Swagger 请求类型有：Body Path Query
+		var urlPaths = []; // Swagger 请求类型 Path
+		var urlQuerys = []; // Swagger 请求类型 Query
+		// 获取是否存在 methods 支持的类型 的方法
+		var method = path[methods[m]];		
+		if(method){//  true表示 存在 methods 支持的类型 的方法
+			//console.log(method);
+			var schema = null; // 存放 Body（Swagger请求类型）的 schema
+			if(method.parameters && method.parameters[0]){
+				if(method.parameters.length > 0){
+					// 遍历方法中的输入参数
+					for(var pi in method.parameters){						
+						if(method.parameters[pi].in == "path"){ // 如果是 Swagger 请求类型 Path
+							urlPaths.push(method.parameters[pi]);
+						}else if(method.parameters[pi].in == "query"){ // 如果是 Swagger 请求类型 Query
+							urlQuerys.push(method.parameters[pi]);
+						}else if(method.parameters[pi].in == "body"){ // 如果是 Swagger 请求类型 Body
+							if(schema == null){
+								// 一般情况只会有一个 Body
+								schema = method.parameters[pi].schema;
+								if(schema){
+									// schema["$ref"] 不为空，说明是一个引用类型
+									if(schema["$ref"] != null){
+										schema = definitions[schema["$ref"].replace("#/definitions/","")];
+										schema.type = "json";
+									}else if((schema.type == "array" )&& (schema.items != null)){ // schema 是数组类型
+										schema = definitions[schema.items["$ref"].replace("#/definitions/","")];
+										schema.type = "array";
+									}
+									// Body 参数的描述
+									schema.description = method.parameters[pi].description;
+									// Body 是否为必需
+									schema.required = method.parameters[pi].required;
+								}
+							}
+						}
+					}
+				}
+			}
+			// 获取到 post get put delete
+			var verb = methods[m];
+			if(verb == "delete")
+				verb = "del"; // del 
+			// 获取方法的功能说明 
+			var summary = path[methods[m]].summary;
+			Coder.line();
+			// ----- 输出注释开始 -----
+			Coder.writeLine("/**");
+
+			Coder.writeLine(" * " + summary);
+			
+			if(urlPaths.length > 0){
+				for(var i in urlPaths){
+					var pp = urlPaths[i];
+					Coder.writeLine(" * @param {string} " + getVarName(pp.name) + " " + pp.description);
+				}
+			}
+			
+			if(urlQuerys.length > 0){
+				for(var i in urlQuerys){
+					var pp = urlQuerys[i];
+					Coder.writeLine(" * @param {string} " + getVarName(pp.name) + " " + pp.description);
+				}
+			}
+
+			if(schema){
+				if(!schema.description)schema.description="";
+				var required = (schema.required==true?"(*必需) ":"");
+			
+				Coder.writeLine(" * @param {" + schema.type + "} data " + required + schema.description);
+				outputModel(3,schema);
+			}
+			Coder.writeLine(" * @param {function} success 成功回调处理函数");
+			Coder.writeLine(" * @param {function} fail 失败回调处理函数");
+			
+			if(method.responses){
+				var respOk = method.responses["200"];
+				var resp_schema = null;
+				if(respOk)
+					resp_schema = respOk.schema;
+				if(resp_schema){
+					Coder.writeLine(" * @return {json} 回调返回的数据");
+					if(resp_schema["$ref"]){
+						//resp_schema = definitions[resp_schema["$ref"].replace("#/definitions/","")];						
+						outputModel(3,resp_schema);
+					}
+				}
+			}		
+		
+			Coder.writeLine(" */");	
+			// ----- 输出注释结束 -----
+			
+
+			// ----- 输出Api函数代码开始 -----			
+			Coder.write(SwaggerApiName + "." + getFuncName(method.operationId,summary) + " = function(");
+			// 输出 Path 类型的参数
+			if(urlPaths.length > 0){
+				for(var i in urlPaths){
+					var pp = urlPaths[i];
+					Coder.write(getVarName(pp.name) + ", ");
+				}
+			}
+			// 输出 Query 类型的参数
+			if(urlQuerys.length > 0){
+				for(var i in urlQuerys){
+					var pp = urlQuerys[i];
+					Coder.write(getVarName(pp.name) + ", ");
+				}
+			}
+			// 输出 Body 类型的参数
+			if((verb == "post" || verb == "put") && schema){
+				Coder.write("data, ");
+			}
+			Coder.write("success, fail){");Coder.line();
+			
+			// 对 Query 类型的为空的参数 赋值为 空字符串
+			if(urlQuerys.length > 0){
+				for(var i in urlQuerys){
+					var pp = urlQuerys[i];
+					Coder.space(2);Coder.write("if(",getVarName(pp.name)," == null) ",getVarName(pp.name)," = \"\";");Coder.line();
+				}
+				Coder.line();
+			}
+			
+			Coder.space(2);Coder.write(SwaggerApiName + "." + verb + "({");Coder.line();
+			
+			var url = uri;
+			// 通过 Path 类型的参数 对 Url 进行处理。
+			// 比如："query/{p1}/{p2}/exec" 处理后为 "query/"+p1+"/"+p2+"/exec";
+			if(urlPaths.length > 0){
+				for(var i in urlPaths){
+					var pp = urlPaths[i];
+					url = url.replace("{"+pp.name+"}","\" + "+getVarName(pp.name)+" + \"");
+				}
+			}
+			// 通过 Query 类型的参数 对 Url 进行处理。
+			// 比如："query/exec" 处理后为 "query/exec?q1="+q1+"&q2="+q2
+			if(urlQuerys.length > 0){
+				url += "?";
+				var idx = 0;
+				for(var i in urlQuerys){
+					var qp = urlQuerys[i];
+					url += qp.name + "=\" + " + getVarName(qp.name) + " + \"";
+					idx++;
+					if(idx < urlQuerys.length)
+						url += "&";
+				}
+			}
+			// 输出 url 参数
+			Coder.space(4);Coder.write("url : ",SwaggerApiName,".basePath + ","\"",url,"\"",",");Coder.line();
+			
+			// 只有 post put 的方式才会存在 data 参数，当然 schema 为空也说明不存在 data 参数
+			if((verb == "post" || verb == "put") && schema){
+				Coder.space(4);Coder.write("data : data,");Coder.line();
+			}
+			
+			// 输出回调的2个参数（成功和失败）
+			Coder.space(4);Coder.write("success : success",",");Coder.line();
+			Coder.space(4);Coder.write("fail : fail");Coder.line();
+			//Coder.writeStr(uri);
+			
+			Coder.space(2);Coder.write("});");Coder.line();
+
+			Coder.write("}");Coder.line();
+			
+			// ----- 输出Api函数代码结束 -----	
+		}
+	}
+};
+
+/*
+ * 根据 Swagger Doc 生成代码。
+ * @param doc  Swagger Doc
+ * @param init 是否加上初始化的代码，如果有多个 Swagger Doc 需要生成，第一次 init 为 true，其他为 false。
+ */
+var generate = function(doc, init){
+	RestApi.basePath = doc.basePath;
+	
+	if(init == null)
+		init = true;
+	if(init){
+		Coder.write("/* RestApi.generated.js */");
+		Coder.line();
+		
+		Coder.write("var " + SwaggerApiName + " = new HttpClient();");
+		Coder.line();
+		Coder.write(SwaggerApiName,".host=","\"",doc.host,"\"");	
+		Coder.line();
+		Coder.write(SwaggerApiName,".basePath=","\"",doc.basePath,"\"");	
+		Coder.line();
+	}
+
+	var methods = ["get","put","post","delete"];
+	definitions = doc.definitions;
+
+	for(var uri in doc.paths){
+		var path = doc.paths[uri];
+		//if(uri == "/deliver/lack-register")
+			generateApi(uri,path);
+	}
+	
+	// 最后，自动输出 RestApi 的方法别名映射代码（构建 ApiMethodAliases 映射）
+	outputNewApiMethodAliases();
+}
+
+// 生成代码的测试
+//Api.getAllParamsUsingGET_1(function(data){console.log(data,"data");},function(err){console.log(err,"err");})
+/*
+Api.login(
+	{
+	  "password": "e10adc3949ba59abbe56e057f20f883e",
+	  "rememberMe": false,
+	  "userCode": "admin"
+	},
+	function(data){
+		console.log(data,"data");
+	},
+	function(err){
+		console.log(err,"err");
+	}
+);
+// */
+  //-->
+  </script>
+ </body>
+</html>
