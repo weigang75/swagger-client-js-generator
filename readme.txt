@@ -1,31 +1,31 @@
-Swagger Api JavaScript ¿Í»§¶Ë´úÂëÉú³ÉÆ÷
+Swagger Api JavaScript å®¢æˆ·ç«¯ä»£ç ç”Ÿæˆå™¨
 
-[Ê¹ÓÃËµÃ÷]
-1. °Ñµ±Ç°Ä¿Â¼×÷Îªweb·¢²¼(²Î¿¼ÏÂÃæ[·¢²¼·½Ê½])
-   ÔÚä¯ÀÀÆ÷ÖĞ´ò¿ª generator.html ¼´¿É£¬±ÈÈç http://127.0.0.1:8080/generator.html;
-2. ÔÚ´ò¿ªµÄÒ³Ãæ generator.html ÖĞ£¬Ö¸¶¨ ApiDoc µØÖ·(Ä¬ÈÏÎªswagger.jsonÑùÀıÎÄ¼ş);
-3. µã»÷¡°¿ªÊ¼Éú³É¡±£¬ÏÂÔØ2¸öÎÄ¼ş
-   ApiMethod.conf.generated.js ÓÃÓÚÅäÖÃ·½·¨±ğÃû
-   RestApi.generated.js  Éú³ÉµÄ Api JavaScript ´úÂë
+[ä½¿ç”¨è¯´æ˜]
+1. æŠŠå½“å‰ç›®å½•ä½œä¸ºwebå‘å¸ƒ(å‚è€ƒä¸‹é¢[å‘å¸ƒæ–¹å¼])
+   åœ¨æµè§ˆå™¨ä¸­æ‰“å¼€ generator.html å³å¯ï¼Œæ¯”å¦‚ http://127.0.0.1:7533/generator.html;
+2. åœ¨æ‰“å¼€çš„é¡µé¢ generator.html ä¸­ï¼ŒæŒ‡å®š ApiDoc åœ°å€(é»˜è®¤ä¸ºswagger.jsonæ ·ä¾‹æ–‡ä»¶);
+3. ç‚¹å‡»â€œå¼€å§‹ç”Ÿæˆâ€ï¼Œä¸‹è½½2ä¸ªæ–‡ä»¶
+   ApiMethod.conf.generated.js ç”¨äºé…ç½®æ–¹æ³•åˆ«å
+   RestApi.generated.js  ç”Ÿæˆçš„ Api JavaScript ä»£ç 
 
-[·¢²¼·½Ê½]
-1. Ä¬ÈÏÊ¹ÓÃ nodejs ·¢²¼
+[å‘å¸ƒæ–¹å¼]
+1. é»˜è®¤ä½¿ç”¨ nodejs å‘å¸ƒ
  1) npm install
  2) node server.js
 
-2. ÆäËû·¢²¼¿ÉÒÔÊ¹ÓÃIIS¡¢nginx¡¢tomcat¡¢apache
+2. å…¶ä»–å‘å¸ƒå¯ä»¥ä½¿ç”¨IISã€nginxã€tomcatã€apache
 
-ÎÄ¼şËµÃ÷£º
-1. generator.html : Ö÷Ò³ÃæÎÄ¼ş
+æ–‡ä»¶è¯´æ˜ï¼š
+1. generator.html : ä¸»é¡µé¢æ–‡ä»¶
 2. swagger.json   : Swagger Api Doc 
-3. package.json server.js : nodejs Ïà¹ØÎÄ¼ş
-4. start_server.bat £º ÔËĞĞ node server.js
+3. package.json server.js : nodejs ç›¸å…³æ–‡ä»¶
+4. start_server.bat ï¼š è¿è¡Œ node server.js
 
 
 -------------------------------------
-ÒÔÏÂÎÄ×ÖºöÂÔ
+ä»¥ä¸‹æ–‡å­—å¿½ç•¥
 -------------------------------------
 1. npm init
 2. npm install express
 3. node server.js
-4. http://127.0.0.1:8080/generator.html
+4. http://127.0.0.1:7533/generator.html
