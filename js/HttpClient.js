@@ -1,4 +1,3 @@
-//alert("hello");
 /** HttpClient */
 function HttpClient() {
     this.request = function (method, url, model, success, fail) {
