@@ -448,6 +448,7 @@ var generate = function(doc, init){
 	if(init == null)
 		init = true;
 	if(init){
+		coder.clear();
 		coder.write("/* RestApi.generated.js */");
 		coder.line();
 		
